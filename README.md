@@ -1,4 +1,4 @@
-# TheStyle — Minimal Fashion Store
+# TheStyle — Fashion Store
 
 A production-ready e-commerce fashion store with Stripe payment integration. Built with React, Node.js, Express, MongoDB, and Stripe Checkout.
 
