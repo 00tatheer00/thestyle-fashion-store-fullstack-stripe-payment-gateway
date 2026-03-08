@@ -3,6 +3,7 @@ import { Link, useLocation } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { ShoppingBag, Search, Menu, X, Heart, User } from "lucide-react";
 import { useCart } from "../context/CartContext";
+import { useWishlist } from "../context/WishlistContext";
 
 const navLinks = [
   { label: "Home", path: "/" },
@@ -15,6 +16,7 @@ export default function Navbar({ onCartOpen, onSearchOpen }) {
   const [scrolled, setScrolled] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
   const { totalItems } = useCart();
+  const { totalItems: wishlistCount } = useWishlist();
   const location = useLocation();
 
   useEffect(() => {
@@ -82,10 +84,19 @@ export default function Navbar({ onCartOpen, onSearchOpen }) {
               </button>
               <Link
                 to="/wishlist"
-                className="p-1 hover:opacity-60 transition-opacity hidden sm:block"
+                className="relative p-1 hover:opacity-60 transition-opacity hidden sm:block"
                 aria-label="Wishlist"
               >
                 <Heart size={20} strokeWidth={1.5} />
+                {wishlistCount > 0 && (
+                  <motion.span
+                    initial={{ scale: 0 }}
+                    animate={{ scale: 1 }}
+                    className="absolute -top-1 -right-1 w-4.5 h-4.5 bg-red-500 text-white text-[10px] rounded-full flex items-center justify-center font-medium"
+                  >
+                    {wishlistCount}
+                  </motion.span>
+                )}
               </Link>
               <Link
                 to="/account"

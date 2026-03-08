@@ -14,6 +14,7 @@ import {
 } from "lucide-react";
 import { productAPI } from "../services/api";
 import { useCart } from "../context/CartContext";
+import { useWishlist } from "../context/WishlistContext";
 import toast from "react-hot-toast";
 import ProductCard from "../components/ProductCard";
 
@@ -27,6 +28,7 @@ export default function ProductDetail() {
   const [selectedColor, setSelectedColor] = useState(null);
   const [quantity, setQuantity] = useState(1);
   const { addItem } = useCart();
+  const { toggleItem, isWishlisted } = useWishlist();
 
   useEffect(() => {
     const fetchProduct = async () => {
@@ -293,8 +295,28 @@ export default function ProductDetail() {
                 <ShoppingBag size={18} />
                 Add to Bag
               </button>
-              <button className="w-12 h-12 flex items-center justify-center border border-gray-200 hover:border-gray-400 transition-colors">
-                <Heart size={18} strokeWidth={1.5} />
+              <button
+                onClick={() => {
+                  toggleItem(product);
+                  toast.success(
+                    isWishlisted(product) ? "Removed from wishlist" : "Added to wishlist",
+                    {
+                      style: { background: "#1a1a1a", color: "#fff", fontSize: "14px" },
+                      iconTheme: { primary: "#fff", secondary: "#1a1a1a" },
+                    }
+                  );
+                }}
+                className={`w-12 h-12 flex items-center justify-center border transition-all ${
+                  isWishlisted(product)
+                    ? "border-red-300 bg-red-50 text-red-500"
+                    : "border-gray-200 hover:border-gray-400"
+                }`}
+              >
+                <Heart
+                  size={18}
+                  strokeWidth={1.5}
+                  className={isWishlisted(product) ? "fill-current" : ""}
+                />
               </button>
             </div>
 

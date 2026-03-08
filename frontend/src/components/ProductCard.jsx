@@ -1,14 +1,17 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
-import { Heart, ShoppingBag, Eye } from "lucide-react";
+import { Heart, ShoppingBag } from "lucide-react";
 import { useCart } from "../context/CartContext";
+import { useWishlist } from "../context/WishlistContext";
 import toast from "react-hot-toast";
 
 export default function ProductCard({ product, index = 0 }) {
   const [hovered, setHovered] = useState(false);
   const [imageLoaded, setImageLoaded] = useState(false);
   const { addItem } = useCart();
+  const { toggleItem, isWishlisted } = useWishlist();
+  const wishlisted = isWishlisted(product);
 
   const hasDiscount = product.compareAtPrice && product.compareAtPrice > product.price;
   const discountPercent = hasDiscount
@@ -91,10 +94,22 @@ export default function ProductCard({ product, index = 0 }) {
               onClick={(e) => {
                 e.preventDefault();
                 e.stopPropagation();
+                toggleItem(product);
+                toast.success(
+                  wishlisted ? `Removed from wishlist` : `Added to wishlist`,
+                  {
+                    style: { background: "#1a1a1a", color: "#fff", fontSize: "14px" },
+                    iconTheme: { primary: "#fff", secondary: "#1a1a1a" },
+                  }
+                );
               }}
-              className="w-11 h-11 flex items-center justify-center bg-white/95 backdrop-blur-sm hover:bg-gray-900 hover:text-white transition-all duration-300"
+              className={`w-11 h-11 flex items-center justify-center backdrop-blur-sm transition-all duration-300 ${
+                wishlisted
+                  ? "bg-red-50 text-red-500 hover:bg-red-100"
+                  : "bg-white/95 hover:bg-gray-900 hover:text-white"
+              }`}
             >
-              <Heart size={16} strokeWidth={1.5} />
+              <Heart size={16} strokeWidth={1.5} className={wishlisted ? "fill-current" : ""} />
             </button>
           </motion.div>
         </div>
